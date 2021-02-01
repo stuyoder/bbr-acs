@@ -1,6 +1,6 @@
 ## Bootable live image
 
-Scripts are used to create a bootable live image which will test BSA and FWTS automatically.
+Scripts in this repo are used to create a bootable live image which will test BSA and FWTS automatically.
 
 ### Prerequisite
 
