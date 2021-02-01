@@ -88,13 +88,6 @@ get_fwts_src()
     popd
 }
 
-extract_ramdisk()
-{
-    pushd $TOP_DIR
-    tar -xvjhf ramdisk.tar.bz
-    popd
-}
-
 sudo apt install git curl mtools gdisk gcc\
  openssl automake autotools-dev libtool bison flex\
  bc uuid-dev python3 libglib2.0-dev libssl-dev autopoint
@@ -106,4 +99,3 @@ get_busybox_src
 get_linux_src
 get_cross_compiler
 get_fwts_src
-extract_ramdisk
