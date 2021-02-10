@@ -50,6 +50,12 @@ do_build()
     CROSS_COMPILE_DIR=$(dirname $CROSS_COMPILE)
     PATH=$(getconf PATH)
     PATH="$PATH:$CROSS_COMPILE_DIR"
+
+    if ! patch -R -p1 -s -f --dry-run < $TOP_DIR/build-scripts/patches/sbbr-fwts.patch; then
+        echo "Applying FWTS Patch ..."
+        patch  -p1  < $TOP_DIR/build-scripts/patches/sbbr-fwts.patch
+    fi
+
     mkdir -p $FWTS_BINARY
     mkdir -p $FWTS_BINARY/bash
     autoreconf -ivf
@@ -62,6 +68,7 @@ do_build()
     --prefix=$TOP_DIR/$FWTS_PATH/$FWTS_BINARY \
     --exec-prefix=$TOP_DIR/$FWTS_PATH/$FWTS_BINARY --datarootdir=$TOP_DIR/$FWTS_PATH/$FWTS_BINARY \
     --with-bashcompletiondir=$TOP_DIR/$FWTS_PATH/$FWTS_BINARY/bash
+
     make install
     popd
 }
