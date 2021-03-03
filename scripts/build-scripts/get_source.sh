@@ -87,6 +87,14 @@ get_fwts_src()
     git submodule update --init
     popd
 }
+get_sct_src()
+{
+    git clone --single-branch https://github.com/tianocore/edk2-test
+    pushd $TOP_DIR/edk2-test
+    git checkout 421a6997ef362c6286c4ef87d21d5367a9d1fb58
+    popd
+    
+}
 
 sudo apt install git curl mtools gdisk gcc\
  openssl automake autotools-dev libtool bison flex\
@@ -94,6 +102,7 @@ sudo apt install git curl mtools gdisk gcc\
 
 get_uefi_src
 get_bsa_src
+get_sct_src
 get_grub_src
 get_busybox_src
 get_linux_src
