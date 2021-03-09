@@ -181,7 +181,7 @@ case `uname` in
 		;;
 
 		*)
-			echo "Couldn't build SBBR SCT:"
+			echo "Couldn't build BBR SCT:"
 			PrintUsage
 			exit -1
 		;;
@@ -198,14 +198,14 @@ case `uname` in
 		;;
 
 		*)
-			echo "Couldn't build SBBR SCT:"
+			echo "Couldn't build BBR SCT:"
 			PrintUsage
 			exit -1
 		;;
 	esac
    ;;
    *)
-     echo "Couldn't build SBBR SCT:"
+     echo "Couldn't build BBR SCT:"
      echo "Unknown OS, Use this script either in Unix or Cygwin environment".
      PrintUsage
      exit -1
@@ -277,13 +277,13 @@ cp $EDK_TOOLS_PATH/Source/C/bin/GenBin $DEST_DIR/GenBin
 #
 # Build the SCT package
 #
-build -p SctPkg/UEFI/SBBR_SCT.dsc -a $SCT_TARGET_ARCH -t $TARGET_TOOLS -b $SCT_BUILD $3 $4 $5 $6 $7 $8 $9
+build -p SctPkg/UEFI/BBR_SCT.dsc -a $SCT_TARGET_ARCH -t $TARGET_TOOLS -b $SCT_BUILD $3 $4 $5 $6 $7 $8 $9
 
 # Check if there is any error
 status=$?
 if test $status -ne 0
 then
-echo Could not build the SBBR SCT package
+echo Could not build the BBR SCT package
         exit -1
 fi
 
@@ -302,19 +302,19 @@ done
 #
 # Change directory to Build directory
 #
-cd Build/SbbrSct/${SCT_BUILD}_${TARGET_TOOLS}
+cd Build/bbrSct/${SCT_BUILD}_${TARGET_TOOLS}
 pwd
 
 #
 # Run a script to generate Sct binary for the target architecture
 #
-../../../SctPkg/CommonGenFramework.sh sbbr_sct $SCT_TARGET_ARCH Install$SCT_TARGET_ARCH.efi
+../../../SctPkg/CommonGenFramework.sh bbr_sct $SCT_TARGET_ARCH Install$SCT_TARGET_ARCH.efi
 
 status=$?
 if test $status -ne 0
 then
-echo Could not generate SBBR SCT binary
+echo Could not generate BBR SCT binary
      exit -1
 else
-echo The SBBR SCT binary "SctPackage${SCT_TARGET_ARCH}" is located at "$EFI_SOURCE/Build/SbbrSct/${SCT_BUILD}_${TARGET_TOOLS}"
+echo The BBR SCT binary "SctPackage${SCT_TARGET_ARCH}" is located at "$EFI_SOURCE/Build/bbrSct/${SCT_BUILD}_${TARGET_TOOLS}"
 fi

@@ -78,23 +78,29 @@ do_build()
     cp -r $TOP_DIR/build-scripts/patches/edk2-tests/SbbrBootServices uefi-sct/SctPkg/TestCase/UEFI/EFI/BootServices/
     cp -r $TOP_DIR/build-scripts/patches/edk2-tests/SbbrEfiSpecVerLvl $TOP_DIR/build-scripts/patches/edk2-tests/SbbrRequiredUefiProtocols $TOP_DIR/build-scripts/patches/edk2-tests/SbbrSmbios $TOP_DIR/build-scripts/patches/edk2-tests/SbbrSysEnvConfig uefi-sct/SctPkg/TestCase/UEFI/EFI/Generic/
     cp -r $TOP_DIR/build-scripts/patches/edk2-tests/SBBRRuntimeServices uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/
-    cp $TOP_DIR/build-scripts/patches/edk2-tests/SBBR_SCT.dsc uefi-sct/SctPkg/UEFI/
-    cp $TOP_DIR/build-scripts/patches/edk2-tests/build_sbbr.sh uefi-sct/SctPkg/
+    cp $TOP_DIR/build-scripts/patches/edk2-tests/BBR_SCT.dsc uefi-sct/SctPkg/UEFI/
+    cp $TOP_DIR/build-scripts/patches/edk2-tests/build_bbr.sh uefi-sct/SctPkg/
+
+    #cp -r $TOP_DIR/build-scripts/patches/edk2-tests/sct_parser uefi-sct/sct_parser
 
 
-    if ! patch -R -p1 -s -f --dry-run < $TOP_DIR/build-scripts/patches/edk2-test-sbbr.patch; then
+
+    if ! patch -R -p1 -s -f --dry-run < $TOP_DIR/build-scripts/patches/edk2-test-bbr.patch; then
         echo "Applying SCT patch ..."
-        patch  -p1  < $TOP_DIR/build-scripts/patches/edk2-test-sbbr.patch
+        patch  -p1  < $TOP_DIR/build-scripts/patches/edk2-test-bbr.patch
     fi
 
     
     
     pushd uefi-sct
-    ./SctPkg/build_sbbr.sh $TARGET_ARCH GCC $UEFI_BUILD_MODE
+    ./SctPkg/build_bbr.sh $TARGET_ARCH GCC $UEFI_BUILD_MODE
 
     mkdir -p ${TARGET_ARCH}_SCT/SCT
-    cp -r Build/SbbrSct/DEBUG_GCC5/SctPackage${TARGET_ARCH}/${TARGET_ARCH}/* ${TARGET_ARCH}_SCT/SCT/
-    cp Build/SbbrSct/DEBUG_GCC5/SctPackage$TARGET_ARCH/SctStartup.nsh ${TARGET_ARCH}_SCT/Startup.nsh
+    cp -r Build/bbrSct/DEBUG_GCC5/SctPackage${TARGET_ARCH}/${TARGET_ARCH}/* ${TARGET_ARCH}_SCT/SCT/
+    cp Build/bbrSct/DEBUG_GCC5/SctPackage$TARGET_ARCH/SctStartup.nsh ${TARGET_ARCH}_SCT/Startup.nsh
+
+    # Copy the SCT Parser tool into the repo
+    #cp sct_parser/* ${TARGET_ARCH}_SCT/SCT/Sequence
 
     popd
 
@@ -107,7 +113,7 @@ do_clean()
     PATH="$PATH:$CROSS_COMPILE_DIR"
     source $TOP_DIR/$UEFI_PATH/edksetup.sh
     make -C $TOP_DIR/$UEFI_PATH/BaseTools clean
-    rm -rf Build/SbbrSct
+    rm -rf Build/bbrSct
     popd
 }
 
