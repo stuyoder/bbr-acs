@@ -32,7 +32,7 @@ TOP_DIR=`pwd`
 
 get_linux_src()
 {
-    curl  https://mirrors.edge.kernel.org/pub/linux/kernel/v5.x/linux-5.9.9.tar.xz | tar xJf -
+    curl  https://mirrors.edge.kernel.org/pub/linux/kernel/v5.x/linux-5.10.tar.xz | tar xJf -
 }
 
 get_busybox_src()
@@ -57,6 +57,9 @@ get_bsa_src()
     pushd $TOP_DIR/edk2
     git clone https://github.com/tianocore/edk2-libc
     git clone ssh://$USER@ap-gerrit-1.ap01.arm.com:29418/avk/syscomp_bsa ShellPkg/Application/bsa-acs
+    popd
+    pushd  $TOP_DIR/edk2/ShellPkg/Application/bsa-acs
+    git pull
     popd
 }
 

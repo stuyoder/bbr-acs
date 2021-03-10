@@ -29,11 +29,6 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 
-source ./build-scripts/build-uefi.sh
-source ./build-scripts/build-bsaefi.sh $@
-source ./build-scripts/build-sct.sh
-source ./build-scripts/build-linux.sh
-source ./build-scripts/build-grub.sh
-source ./build-scripts/build-fwts.sh
-source ./build-scripts/build-busybox.sh
+source ./build-scripts/build-all.sh IR
+
 

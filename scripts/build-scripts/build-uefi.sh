@@ -66,6 +66,7 @@ do_build()
     local vars=
     export PACKAGES_PATH=$TOP_DIR/$UEFI_PATH
     export PYTHON_COMMAND=/usr/bin/python3
+    git checkout  ShellPkg/ShellPkg.dsc #build shell with default file
     build -a AARCH64 -t GCC5 -p ShellPkg/ShellPkg.dsc -b $UEFI_BUILD_MODE
     popd
 }

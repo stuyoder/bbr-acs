@@ -60,10 +60,24 @@ do_build()
     pushd $TOP_DIR/$UEFI_PATH
     CROSS_COMPILE_DIR=$(dirname $CROSS_COMPILE)
     PATH="$PATH:$CROSS_COMPILE_DIR"
-    if ! patch -R -p0 -s -f --dry-run < $TOP_DIR/build-scripts/patches/bsa.patch; then
-        echo "Applying BSA Patch ..."
-        patch  -p0  < $TOP_DIR/build-scripts/patches/bsa.patch
+
+    git checkout ShellPkg/ShellPkg.dsc # Remove if any patches applied
+
+    if [ "$BUILD_PLAT" = "ES" ]; then
+       if ! patch -R -p0 -s -f --dry-run < $TOP_DIR/build-scripts/patches/es_bsa.patch; then
+         echo "Applying ES BSA Patch ..."
+         patch  -p0  < $TOP_DIR/build-scripts/patches/es_bsa.patch
+       fi
+    elif [ "$BUILD_PLAT" = "IR" ]; then
+       if ! patch -R -p0 -s -f --dry-run < $TOP_DIR/build-scripts/patches/ir_bsa.patch; then
+          echo "Applying IR BSA Patch ..."
+          patch  -p0  < $TOP_DIR/build-scripts/patches/ir_bsa.patch
+       fi
+    else
+       echo "Specify platform ES or IR"
+       exit_fun
     fi
+
     source ./edksetup.sh
     make -C BaseTools/Source/C
     export EDK2_TOOLCHAIN=$UEFI_TOOLCHAIN
@@ -93,5 +107,18 @@ do_package ()
     pushd $TOP_DIR
 }
 
+exit_fun() {
+   exit 1 # Exit script
+}
+
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+
+BUILD_PLAT=$1
+
+if [ -z "$BUILD_PLAT" ]
+then
+   echo "Specify platform ES or IR"
+   exit_fun
+fi
+
 source $DIR/framework.sh $@
