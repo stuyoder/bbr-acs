@@ -47,18 +47,23 @@ for %i in 0 1 2 3 4 5 6 7 8 9 A B C D E F
       goto Done
     endif
 
-    if exist FS%i:\Sct\.passive.mode then
-      if exist FS%i:\Sct\.verbose.mode then
-        Sct -c -p mnp -v -s EBBR.seq
+    if exist FS%i:\Sct\.ebbr then
+      if exist FS%i:\Sct\.passive.mode then
+        if exist FS%i:\Sct\.verbose.mode then
+          Sct -c -p mnp -v
+        else
+          Sct -c -p mnp
+        endif
       else
-        Sct -c -p mnp -s EBBR.seq
+        if exist FS%i:\Sct\.verbose.mode then
+          Sct -c -v 
+        else
+          Sct -c
+        endif
       endif
     else
-      if exist FS%i:\Sct\.verbose.mode then
-        Sct -c -v -s EBBR.seq
-      else
-        Sct -c -s EBBR.seq
-      endif
+      echo > .ebbr
+      Sct -s EBBR.seq
     endif
     
 #    load SCRT\SCRTDriver.efi
@@ -69,3 +74,4 @@ for %i in 0 1 2 3 4 5 6 7 8 9 A B C D E F
 endfor
 
 :Done
+

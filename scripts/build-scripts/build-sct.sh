@@ -80,6 +80,13 @@ do_build()
     cp -r $TOP_DIR/build-scripts/patches/edk2-tests/SBBRRuntimeServices uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/
     cp $TOP_DIR/build-scripts/patches/edk2-tests/BBR_SCT.dsc uefi-sct/SctPkg/UEFI/
     cp $TOP_DIR/build-scripts/patches/edk2-tests/build_bbr.sh uefi-sct/SctPkg/
+    
+    #Startup/runtime files.
+    mkdir -p uefi-sct/SctPkg/BBR
+    cp $TOP_DIR/build-scripts/patches/edk2-tests/EBBRStartup.nsh uefi-sct/SctPkg/BBR/
+    cp $TOP_DIR/build-scripts/patches/edk2-tests/SBBRStartup.nsh uefi-sct/SctPkg/BBR/
+    cp $TOP_DIR/build-scripts/patches/edk2-tests/EBBR.seq uefi-sct/SctPkg/BBR/
+    cp $TOP_DIR/build-scripts/patches/edk2-tests/SBBR.seq uefi-sct/SctPkg/BBR/
 
     #cp -r $TOP_DIR/build-scripts/patches/edk2-tests/sct_parser uefi-sct/sct_parser
 
@@ -96,8 +103,10 @@ do_build()
     ./SctPkg/build_bbr.sh $TARGET_ARCH GCC $UEFI_BUILD_MODE
 
     mkdir -p ${TARGET_ARCH}_SCT/SCT
-    cp -r Build/bbrSct/DEBUG_GCC5/SctPackage${TARGET_ARCH}/${TARGET_ARCH}/* ${TARGET_ARCH}_SCT/SCT/
-    cp Build/bbrSct/DEBUG_GCC5/SctPackage$TARGET_ARCH/SctStartup.nsh ${TARGET_ARCH}_SCT/Startup.nsh
+    cp -r Build/bbrSct/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/SctPackage${TARGET_ARCH}/${TARGET_ARCH}/* ${TARGET_ARCH}_SCT/SCT/
+    cp Build/bbrSct/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/SctPackage${TARGET_ARCH}/SctStartup.nsh ${TARGET_ARCH}_SCT/Startup.nsh
+    cp Build/bbrSct/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/SctPackage${TARGET_ARCH}/EBBRStartup.nsh ${TARGET_ARCH}_SCT/EBBRStartup.nsh
+    cp Build/bbrSct/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/SctPackage${TARGET_ARCH}/SBBRStartup.nsh ${TARGET_ARCH}_SCT/SBBRStartup.nsh
 
     # Copy the SCT Parser tool into the repo
     #cp sct_parser/* ${TARGET_ARCH}_SCT/SCT/Sequence

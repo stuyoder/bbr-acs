@@ -1,8 +1,8 @@
 diff --git a/uefi-sct/SctPkg/CommonGenFramework.sh b/uefi-sct/SctPkg/CommonGenFramework.sh
-index 779a6a44..ccffe615 100755
+index 779a6a44..23ae4e91 100755
 --- a/uefi-sct/SctPkg/CommonGenFramework.sh
 +++ b/uefi-sct/SctPkg/CommonGenFramework.sh
-@@ -338,4 +338,194 @@ then
+@@ -338,4 +338,197 @@ then
    CopyDependency Ebc
    CopyDependency PxeBaseCode
  fi
@@ -16,9 +16,12 @@ index 779a6a44..ccffe615 100755
 +    # *********************************************
 +    # Copy the UEFI 2.1 Test Cases
 +    # *********************************************
-+
-+    cp ../../../SctPkg/Config/Script/EbbrStartup.nsh   SctPackage$ProcessorType/ > NUL
-+    cp ../../../SctPkg/Config/Script/SbbrStartup.nsh   SctPackage$ProcessorType/ > NUL
++  
++    # StartupScript items.
++    cp ../../../SctPkg/BBR/EBBRStartup.nsh           SctPackage$ProcessorType/ > NUL
++    cp ../../../SctPkg/BBR/SBBRStartup.nsh           SctPackage$ProcessorType/ > NUL
++    cp ../../../SctPkg/BBR/EBBR.seq                 $Framework/Sequence/ > NUL
++    cp ../../../SctPkg/BBR/SBBR.seq                 $Framework/Sequence/ > NUL
 +
 +    mkdir -p $Framework/SCRT
 +    cp $ProcessorType/SCRTDRIVER.efi                           $Framework/SCRT  > NUL
@@ -26,7 +29,7 @@ index 779a6a44..ccffe615 100755
 +    cp ../../../SctPkg/Config/Data/SCRT.conf                   $Framework/SCRT  > NUL
 +
 +    cp $ProcessorType/EfiCompliantBBTest.efi                   $Framework/Test/ > NUL
-+
+ 
 +  # Only include ExeModeBBTest.efi if the file exists
 +  if [ -e $ProcessorType/ExeModeBBTest.efi ]; then
 +    cp $ProcessorType/ExeModeBBTest.efi                      $Framework/Test/ > NUL
@@ -110,7 +113,7 @@ index 779a6a44..ccffe615 100755
 +    cp $ProcessorType/IPsecConfigBBTest.efi                    $Framework/Test/ > NUL
 +    cp $ProcessorType/IPsec2BBTest.efi                         $Framework/Test/ > NUL
 +    cp $ProcessorType/StorageSecurityCommandBBTest.efi         $Framework/Test/ > NUL
- 
++
 +    cp $ProcessorType/FirmwareManagementBBTest.efi             $Framework/Test/ > NUL
 +
 +    cp $ProcessorType/AdapterInfoBBTest.efi                    $Framework/Test/ > NUL

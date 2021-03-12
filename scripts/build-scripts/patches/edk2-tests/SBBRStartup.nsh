@@ -46,20 +46,23 @@ for %i in 0 1 2 3 4 5 6 7 8 9 A B C D E F
     if %lasterror% == 0 then
       goto Done
     endif
-
-    if exist FS%i:\Sct\.passive.mode then
-      if exist FS%i:\Sct\.verbose.mode then
-        Sct -c -p mnp -v -s SBBR.seq
+    if exists FS%i:\Sct\.sbbr
+      if exist FS%i:\Sct\.passive.mode then
+        if exist FS%i:\Sct\.verbose.mode then
+          Sct -c -p mnp -v
+        else
+          Sct -c -p mnp
+        endif
       else
-        Sct -c -p mnp -s SBBR.seq
+        if exist FS%i:\Sct\.verbose.mode then
+          Sct -c -v
+        else
+          Sct -c
+        endif
       endif
     else
-      if exist FS%i:\Sct\.verbose.mode then
-        Sct -c -v -s SBBR.seq
-      else
-        Sct -c -s SBBR.seq
-      endif
-    endif
+      echo > .sbbr
+      Sct -s SBBR.seq
     
 #    load SCRT\SCRTDriver.efi
 #    SCRT\SCRTApp.efi
