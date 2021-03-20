@@ -1,74 +1,38 @@
-## @file
-#
-#  Copyright 2006 - 2010 Unified EFI, Inc.<BR>
-#  Copyright (c) 2010, Intel Corporation. All rights reserved.<BR>
-#
-#  This program and the accompanying materials
-#  are licensed and made available under the terms and conditions of the BSD License
-#  which accompanies this distribution.  The full text of the license may be found at 
-#  http://opensource.org/licenses/bsd-license.php
-# 
-#  THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,
-#  WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
-# 
-##
-#/*++
-#
-
-# Module Name:
-#
-#   SctStartup.nsh
-#
-# Abstract:
-#
-#   Startup script for EFI SCT automatic running
-#
-#--*/
-
-#
-# NOTE: The file system name is hard coded since I don't know how to get the
-# file system name in the script.
-#
-
 echo -off
 
 for %i in 0 1 2 3 4 5 6 7 8 9 A B C D E F
-  if exist FS%i:\Sct then
+  if exist FS%i:\EFI\BOOT\bbr\SCT then
     #
     # Found EFI SCT harness
     #
     FS%i:
-    cd Sct
-
+    cd FS%i:\EFI\BOOT\bbr\SCT
     echo Press any key to stop the EFI SCT running
-
     stallforkey.efi 5
     if %lasterror% == 0 then
       goto Done
     endif
-    if exists FS%i:\Sct\.sbbr
-      if exist FS%i:\Sct\.passive.mode then
-        if exist FS%i:\Sct\.verbose.mode then
+    if exists FS%i:\sct_results then
+      if exist FS%i:\EFI\BOOT\bbr\SCT\.passive.mode then
+        if exist FS%i:\EFI\BOOT\bbr\SCT\.verbose.mode then
           Sct -c -p mnp -v
         else
           Sct -c -p mnp
         endif
       else
-        if exist FS%i:\Sct\.verbose.mode then
+        if exist FS%i:\EFI\BOOT\bbr\SCT\.verbose.mode then
           Sct -c -v
         else
           Sct -c
         endif
       endif
     else
-      echo > .sbbr
+      mkdir FS%i:\sct_results
       Sct -s SBBR.seq
-    
-#    load SCRT\SCRTDriver.efi
-#    SCRT\SCRTApp.efi
-
+    endif
     goto Done
   endif
 endfor
 
 :Done
+
