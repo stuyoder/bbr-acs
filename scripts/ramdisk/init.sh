@@ -38,7 +38,16 @@ echo "init.sh"
 
 mdev -s
 
-/bin/fwts
+#Check for the existense of fwts test configuration file in the package. EBBR Execution
+if [ -f  /bin/ir_bbr_fwts_tests.ini ]; then
+ test_list=`cat /bin/ir_bbr_fwts_tests.ini | grep -v "^#" | awk '{print $1}' | xargs`
+ echo "Test Executed are $test_list"
+ /bin/fwts `echo $test_list`
+else
+ #SBBR Execution
+ /bin/fwts
+fi
+
 
 exec sh
 

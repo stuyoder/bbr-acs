@@ -43,6 +43,7 @@ RAMDISK_PATH=ramdisk
 FWTS_DEP=$RAMDISK_PATH/fwts_build_dep
 GCC=tools/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-
 CROSS_COMPILE=$TOP_DIR/$GCC
+BUILD_PLAT=$1
 
 do_build()
 {
@@ -92,8 +93,11 @@ do_package ()
 {
     echo "Packaging FWTS... $VARIANT";
     # Copy binaries to output folder
-    cp -R $TOP_DIR/$FWTS_PATH/$FWTS_BINARY ramdisk
-    chmod 777 -R $TOP_DIR/$RAMDISK_PATH/$FWTS_BINARY
+    if [ "$BUILD_PLAT" = "IR" ]; then
+     cp $TOP_DIR/build-scripts/configs/ir_bbr_fwts_tests.ini $TOP_DIR/$FWTS_PATH/$FWTS_BINARY/bin
+    fi
+    cp -R $TOP_DIR/$FWTS_PATH/$FWTS_BINARY ramdisk 
+    chmod 777 -R $TOP_DIR/$RAMDISK_PATH/$FWTS_BINARY 
 }
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )

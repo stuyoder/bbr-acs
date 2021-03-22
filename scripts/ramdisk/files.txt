@@ -16,6 +16,7 @@ file /init ./init.sh 777 0 0
 dir /lib 777 0 0
 
 file /bin/fwts                          ./fwts_output/bin/fwts                                    755 0 0
+file /bin/ir_bbr_fwts_tests.ini         ./fwts_output/bin/ir_bbr_fwts_tests.ini                   766 0 0
 file /lib/libbsd.so.0                   ./fwts_build_dep/libbsd.so.0                              755 0 0
 file /lib/libfdt.so.1                   ./fwts_build_dep/libfdt.so.1                              755 0 0
 file /lib/libgio-2.0.so.0               ./fwts_build_dep/libgio-2.0.so.0                          755 0 0
