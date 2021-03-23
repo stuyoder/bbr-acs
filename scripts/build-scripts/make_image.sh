@@ -40,11 +40,13 @@ OUTDIR=${PLATDIR}
 GRUB_FS_CONFIG_FILE=${TOP_DIR}/build-scripts/configs/grub.cfg
 EFI_CONFIG_FILE=${TOP_DIR}/build-scripts/configs/startup.nsh
 BSA_CONFIG_FILE=${TOP_DIR}/build-scripts/configs/bsa.nsh
+BBR_CONFIG_FILE=${TOP_DIR}/build-scripts/configs/bbr.nsh
 BLOCK_SIZE=512
 SEC_PER_MB=$((1024*2))
 GRUB_PATH=grub
 UEFI_SHELL_PATH=edk2/Build/Shell/RELEASE_GCC5/AARCH64/
 BSA_EFI_PATH=edk2/Build/Shell/DEBUG_GCC49/AARCH64/
+SCT_PATH=edk2-test/uefi-sct/AARCH64_SCT
 
 create_cfgfiles ()
 {
@@ -53,6 +55,7 @@ create_cfgfiles ()
     mcopy -i  $fatpart_name -o ${GRUB_FS_CONFIG_FILE} ::/grub.cfg
     mcopy -i  $fatpart_name -o ${EFI_CONFIG_FILE}     ::/EFI/BOOT/startup.nsh
     mcopy -i  $fatpart_name -o ${BSA_CONFIG_FILE}    ::/EFI/BOOT/bsa/bsa.nsh
+    #mcopy -i  $fatpart_name -o ${BBR_CONFIG_FILE}    ::/EFI/BOOT/bbr/bbr.nsh
 
 }
 
@@ -68,11 +71,14 @@ create_fatpart ()
     mmd -i $fatpart_name ::/grub
     mmd -i $fatpart_name ::/EFI/BOOT/bsa
     mmd -i $fatpart_name ::/bsa_results
+    mmd -i $fatpart_name ::/EFI/BOOT/bbr
+
     mcopy -i $fatpart_name bootaa64.efi ::/EFI/BOOT
     mcopy -i $fatpart_name Shell.efi ::/EFI/BOOT
     mcopy -i $fatpart_name $OUTDIR/Image ::/
     mcopy -i $fatpart_name $PLATDIR/ramdisk-busybox.img  ::/
     mcopy -i $fatpart_name Bsa.efi ::/EFI/BOOT/bsa
+    mcopy -s -i $fatpart_name SCT/* ::/EFI/BOOT/bbr
     echo "FAT partition image created"
 }
 
@@ -106,6 +112,7 @@ prepare_disk_image ()
     cp grubaa64.efi bootaa64.efi
     cp $TOP_DIR/$UEFI_SHELL_PATH/Shell_EA4BB293-2D7F-4456-A681-1F22F42CD0BC.efi Shell.efi
     cp $TOP_DIR/$BSA_EFI_PATH/Bsa.efi Bsa.efi
+    cp -Trv $TOP_DIR/$SCT_PATH/ SCT
     grep -q -F 'mtools_skip_check=1' ~/.mtoolsrc || echo "mtools_skip_check=1" >> ~/.mtoolsrc
 
     #Package images for Busybox
@@ -137,3 +144,4 @@ prepare_disk_image ()
 
 #prepare the disk image
 prepare_disk_image
+

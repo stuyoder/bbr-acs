@@ -56,6 +56,14 @@ TARGET_ARCH=AARCH64
 GCC=tools/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-
 CROSS_COMPILE=$TOP_DIR/$GCC
 
+BBR="$@"
+
+if ! [[ $@ = IR ]] && ! [[ $@ = ES ]] ; then
+    echo "Please provide a target."
+    echo "Usage build-sct.sh <IR/ES>"
+    exit
+fi
+
 do_build()
 {
    
@@ -72,9 +80,11 @@ do_build()
     #export HOST_ARCH = `uname -m`
     #MACHINE=`uname -m`
 
+    #Build base tools
     source $TOP_DIR/$UEFI_PATH/edksetup.sh
     make -C $TOP_DIR/$UEFI_PATH/BaseTools
     
+    #Copy over extra files needed for SBBR tests
     cp -r $TOP_DIR/build-scripts/patches/edk2-tests/SbbrBootServices uefi-sct/SctPkg/TestCase/UEFI/EFI/BootServices/
     cp -r $TOP_DIR/build-scripts/patches/edk2-tests/SbbrEfiSpecVerLvl $TOP_DIR/build-scripts/patches/edk2-tests/SbbrRequiredUefiProtocols $TOP_DIR/build-scripts/patches/edk2-tests/SbbrSmbios $TOP_DIR/build-scripts/patches/edk2-tests/SbbrSysEnvConfig uefi-sct/SctPkg/TestCase/UEFI/EFI/Generic/
     cp -r $TOP_DIR/build-scripts/patches/edk2-tests/SBBRRuntimeServices uefi-sct/SctPkg/TestCase/UEFI/EFI/RuntimeServices/
@@ -83,34 +93,23 @@ do_build()
     
     #Startup/runtime files.
     mkdir -p uefi-sct/SctPkg/BBR
+    #EBBR
     cp $TOP_DIR/build-scripts/patches/edk2-tests/EBBRStartup.nsh uefi-sct/SctPkg/BBR/
-    cp $TOP_DIR/build-scripts/patches/edk2-tests/SBBRStartup.nsh uefi-sct/SctPkg/BBR/
     cp $TOP_DIR/build-scripts/patches/edk2-tests/EBBR.seq uefi-sct/SctPkg/BBR/
+    cp $TOP_DIR/build-scripts/patches/edk2-tests/EfiCompliant_EBBR.ini uefi-sct/SctPkg/BBR/
+    #SBBR
+    cp $TOP_DIR/build-scripts/patches/edk2-tests/SBBRStartup.nsh uefi-sct/SctPkg/BBR/
     cp $TOP_DIR/build-scripts/patches/edk2-tests/SBBR.seq uefi-sct/SctPkg/BBR/
-
-    #cp -r $TOP_DIR/build-scripts/patches/edk2-tests/sct_parser uefi-sct/sct_parser
-
-
+    cp $TOP_DIR/build-scripts/patches/edk2-tests/EfiCompliant_SBBR.ini  uefi-sct/SctPkg/BBR/
 
     if ! patch -R -p1 -s -f --dry-run < $TOP_DIR/build-scripts/patches/edk2-test-bbr.patch; then
         echo "Applying SCT patch ..."
         patch  -p1  < $TOP_DIR/build-scripts/patches/edk2-test-bbr.patch
     fi
 
-    
-    
     pushd uefi-sct
     ./SctPkg/build_bbr.sh $TARGET_ARCH GCC $UEFI_BUILD_MODE
-
-    mkdir -p ${TARGET_ARCH}_SCT/SCT
-    cp -r Build/bbrSct/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/SctPackage${TARGET_ARCH}/${TARGET_ARCH}/* ${TARGET_ARCH}_SCT/SCT/
-    cp Build/bbrSct/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/SctPackage${TARGET_ARCH}/SctStartup.nsh ${TARGET_ARCH}_SCT/Startup.nsh
-    cp Build/bbrSct/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/SctPackage${TARGET_ARCH}/EBBRStartup.nsh ${TARGET_ARCH}_SCT/EBBRStartup.nsh
-    cp Build/bbrSct/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/SctPackage${TARGET_ARCH}/SBBRStartup.nsh ${TARGET_ARCH}_SCT/SBBRStartup.nsh
-
-    # Copy the SCT Parser tool into the repo
-    #cp sct_parser/* ${TARGET_ARCH}_SCT/SCT/Sequence
-
+    
     popd
 
 }
@@ -123,15 +122,36 @@ do_clean()
     source $TOP_DIR/$UEFI_PATH/edksetup.sh
     make -C $TOP_DIR/$UEFI_PATH/BaseTools clean
     rm -rf Build/bbrSct
+    rm -rf ${TARGET_ARCH}_SCT
+
     popd
+
 }
 
 do_package ()
 {
     echo "Packaging sct... $VARIANT";
     # Copy binaries to output folder
+    pushd $TOP_DIR/$SCT_PATH/uefi-sct
+
+    mkdir -p ${TARGET_ARCH}_SCT/SCT
+    cp -r Build/bbrSct/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/SctPackage${TARGET_ARCH}/${TARGET_ARCH}/* ${TARGET_ARCH}_SCT/SCT/
+
+    if [ $BBR = IR ]; then
+        #EBBR
+        cp Build/bbrSct/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/SctPackage${TARGET_ARCH}/EBBRStartup.nsh ${TARGET_ARCH}_SCT/SctStartup.nsh
+        cp SctPkg/BBR/EfiCompliant_EBBR.ini ${TARGET_ARCH}_SCT/SCT/Dependency/EfiCompliantBBTest/EfiCompliant.ini
+
+    else
+        #SBBR
+        cp Build/bbrSct/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/SctPackage${TARGET_ARCH}/SBBRStartup.nsh ${TARGET_ARCH}_SCT/SctStartup.nsh
+        cp SctPkg/BBR/EfiCompliant_SBBR.ini ${TARGET_ARCH}_SCT/SCT/Dependency/EfiCompliantBBTest/EfiCompliant.ini
+    fi
+    
     pushd $TOP_DIR
+
 }
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 source $DIR/framework.sh $@
+
