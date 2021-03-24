@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Copyright (c) 2021, ARM Limited and Contributors. All rights reserved.
 #
@@ -28,33 +28,41 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-#Mount things needed by this script
-/bin/busybox mount -t proc proc /proc
-/bin/busybox mount -t sysfs sysfs /sys
-echo "init.sh"
 
-#Create all the symlinks to /bin/busybox
-/bin/busybox --install -s
+TOP_DIR=`pwd`
+GCC=tools/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-
+export CROSS_COMPILE=$TOP_DIR/$GCC
+export KERNEL_SRC=$TOP_DIR/linux-5.10/out
+LINUX_PATH=$TOP_DIR/linux-5.10
+BSA_PATH=$TOP_DIR/edk2/ShellPkg/Application/bsa-acs
 
-mdev -s
+build_bsa_kernel_driver()
+{
+ pushd $TOP_DIR/linux-acs/bsa-acs-drv/files
+ ./setup.sh $TOP_DIR/edk2/ShellPkg/Application/bsa-acs
+ ./linux_bsa_acs.sh
+ popd
+}
 
-#Check for the existense of fwts test configuration file in the package. EBBR Execution
-if [ -f  /bin/ir_bbr_fwts_tests.ini ]; then
- test_list=`cat /bin/ir_bbr_fwts_tests.ini | grep -v "^#" | awk '{print $1}' | xargs`
- echo "Test Executed are $test_list"
- /bin/fwts `echo $test_list`
-else
- #SBBR Execution
- /bin/fwts
-fi
 
-if [ -f  /lib/modules/bsa_acs.ko ]; then
- insmod /lib/modules/bsa_acs.ko
- mkdir -p /bsa_results/linux
- /bin/bsa > /bsa_results/linux/BsaResults.log
-else
- echo "Warning : BSA Kernel Driver is not found"
-fi
+build_bsa_app()
+{
+ pushd $BSA_PATH/linux_app/bsa-acs-app
+ make clean
+ make
+ popd
+}
 
-exec sh
+pack_in_ramdisk()
+{
+  if [ ! -d $TOP_DIR/ramdisk/linux-bsa ]; then
+    mkdir $TOP_DIR/ramdisk/linux-bsa
+  fi
+  cp $TOP_DIR/linux-acs/bsa-acs-drv/files/bsa_acs.ko $TOP_DIR/ramdisk/linux-bsa
+  cp $BSA_PATH/linux_app/bsa-acs-app/bsa $TOP_DIR/ramdisk/linux-bsa
+}
+
+build_bsa_kernel_driver
+build_bsa_app
+pack_in_ramdisk
 

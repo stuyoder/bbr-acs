@@ -32,7 +32,7 @@ TOP_DIR=`pwd`
 
 get_linux_src()
 {
-    curl  https://mirrors.edge.kernel.org/pub/linux/kernel/v5.x/linux-5.10.tar.xz | tar xJf -
+    git clone --depth 1 --branch v5.10 https://github.com/torvalds/linux.git linux-5.10
 }
 
 get_busybox_src()
@@ -96,8 +96,19 @@ get_sct_src()
     pushd $TOP_DIR/edk2-test
     git checkout 421a6997ef362c6286c4ef87d21d5367a9d1fb58
     popd
-    
 }
+
+
+get_linux-acs_src()
+{
+  git clone ssh://ap-gerrit-1.ap01.arm.com:29418/avk/syscomp_linux_acs linux-acs
+  pushd $TOP_DIR/linux-5.10
+  echo "Applying Linux ACS Patch..."
+  git am $TOP_DIR/linux-acs/kernel/src/0001-BSA-SBSA-ACS-Linux-5.10.patch
+  popd
+
+}
+
 
 sudo apt install git curl mtools gdisk gcc\
  openssl automake autotools-dev libtool bison flex\
@@ -111,3 +122,5 @@ get_busybox_src
 get_linux_src
 get_cross_compiler
 get_fwts_src
+get_linux-acs_src
+

@@ -94,10 +94,13 @@ do_clean()
 do_package ()
 {
     echo "Packaging FWTS... $VARIANT";
-    # Copy binaries to output folder
-    #TODO: This config file is applicable only for IR
-    #Further refine the logic to include only for IR
-    cp $TOP_DIR/build-scripts/configs/ir_bbr_fwts_tests.ini $TOP_DIR/$FWTS_PATH/$FWTS_BINARY/bin
+    sed -i '/ir_bbr_fwts_tests.ini/d' $TOP_DIR/ramdisk/files.txt
+    if [ "$BUILD_PLAT" = "IR" ]; then
+      #Add the entry in file.txt of ramdisk
+      echo "file /bin/ir_bbr_fwts_tests.ini         ./fwts_output/bin/ir_bbr_fwts_tests.ini                   766 0 0" >> $TOP_DIR/ramdisk/files.txt
+      cp $TOP_DIR/build-scripts/configs/ir_bbr_fwts_tests.ini $TOP_DIR/$FWTS_PATH/$FWTS_BINARY/bin
+    fi
+
     cp -R $TOP_DIR/$FWTS_PATH/$FWTS_BINARY ramdisk
     chmod 777 -R $TOP_DIR/$RAMDISK_PATH/$FWTS_BINARY
 }
