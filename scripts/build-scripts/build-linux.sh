@@ -54,6 +54,7 @@
 #
 # LINUX_IMAGE_TYPE - Image or zImage (Image is the default if not specified)
 
+TOP_DIR=`pwd`
 LINUX_ARCH=arm64
 LINUX_IMAGE_TYPE=Image
 GCC=tools/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-
