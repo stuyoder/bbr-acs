@@ -70,7 +70,6 @@ create_fatpart ()
     mmd -i $fatpart_name ::/EFI/BOOT
     mmd -i $fatpart_name ::/grub
     mmd -i $fatpart_name ::/EFI/BOOT/bsa
-    mmd -i $fatpart_name ::/bsa_results
     mmd -i $fatpart_name ::/EFI/BOOT/bbr
 
     mcopy -i $fatpart_name bootaa64.efi ::/EFI/BOOT
@@ -82,15 +81,27 @@ create_fatpart ()
     echo "FAT partition image created"
 }
 
+create_fatpart2 ()
+{
+    local fatpart_name="$1"  #Name of the FAT partition disk image
+    local fatpart_size="$2"  #FAT partition size (in 512-byte blocks)
+
+    dd if=/dev/zero of=$fatpart_name bs=$BLOCK_SIZE count=$fatpart_size
+    mkfs.vfat $fatpart_name
+    mmd -i $fatpart_name ::/acs_results
+    echo "FAT partition 2 image created"
+}
+
 create_diskimage ()
 {
     local image_name="$1"
     local part_start="$2"
     local fatpart_size="$3"
+    local fatpart2_size="$4"
 
     (echo n; echo 1; echo $part_start; echo +$((fatpart_size-1));\
     echo 0700; echo w; echo y) | gdisk $image_name
-    (echo n; echo 2; echo $((part_start+fatpart_size)); echo +$((fatpart_size-1));\
+    (echo n; echo 2; echo $((part_start+fatpart_size)); echo +$((fatpart2_size-1));\
     echo 8300; echo w; echo y) | gdisk $image_name
 }
 
@@ -102,17 +113,30 @@ prepare_disk_image ()
     echo "Preparing disk image for busybox boot"
     echo "-------------------------------------"
 
+    if [ "$BUILD_PLAT" = "ES" ]; then
+       IMG_BB=es_acs_live_image.img
+       echo -e "\e[1;32m Build ES Live Image at $PLATDIR/$IMG_BB \e[0m"
+    elif [ "$BUILD_PLAT" = "IR" ]; then
+       IMG_BB=ir_acs_live_image.img
+       echo -e "\e[1;32m Build IR Live Image at $PLATDIR/$IMG_BB \e[0m"
+    else
+       echo "Specify platform ES or IR"
+       exit_fun
+    fi
+
     pushd $TOP_DIR/$GRUB_PATH/output
-    local IMG_BB=grub-busybox.img
+
     local FAT_SIZE_MB=512
+    local FAT2_SIZE_MB=50
     local PART_START=$((1*SEC_PER_MB))
     local FAT_SIZE=$((FAT_SIZE_MB*SEC_PER_MB))
+    local FAT2_SIZE=$((FAT2_SIZE_MB*SEC_PER_MB))
 
     rm -f $PLATDIR/$IMG_BB
     cp grubaa64.efi bootaa64.efi
     cp $TOP_DIR/$UEFI_SHELL_PATH/Shell_EA4BB293-2D7F-4456-A681-1F22F42CD0BC.efi Shell.efi
     cp $TOP_DIR/$BSA_EFI_PATH/Bsa.efi Bsa.efi
-    cp -Trv $TOP_DIR/$SCT_PATH/ SCT
+    cp -Tr $TOP_DIR/$SCT_PATH/ SCT
     grep -q -F 'mtools_skip_check=1' ~/.mtoolsrc || echo "mtools_skip_check=1" >> ~/.mtoolsrc
 
     #Package images for Busybox
@@ -127,21 +151,36 @@ prepare_disk_image ()
     create_cfgfiles "fat_part"
     cat fat_part >> $IMG_BB
 
+    #Create fat2 partition
+    create_fatpart2 "result" $FAT2_SIZE
+    cat result >> $IMG_BB
+
     #Space for backup partition table at the bottom (1M)
     cat part_table >> $IMG_BB
 
     # create disk image and copy into output folder
-    create_diskimage $IMG_BB $PART_START $FAT_SIZE
+    create_diskimage $IMG_BB $PART_START $FAT_SIZE $FAT2_SIZE
     cp $IMG_BB $PLATDIR
 
     #remove intermediate files
     rm -f part_table
     rm -f fat_part
+    rm -f result
 
     echo "Completed preparation of disk image for busybox boot"
     echo "----------------------------------------------------"
 }
+exit_fun() {
+   exit 1 # Exit script
+}
 
+BUILD_PLAT=$1
+
+if [ -z "$BUILD_PLAT" ]
+then
+   echo "Specify platform ES or IR"
+   exit_fun
+fi
 #prepare the disk image
 prepare_disk_image
 

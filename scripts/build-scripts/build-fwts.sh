@@ -49,7 +49,8 @@ do_build()
 {
     pushd $TOP_DIR/$FWTS_PATH
     CROSS_COMPILE_DIR=$(dirname $CROSS_COMPILE)
-    PATH=$(getconf PATH)
+    DEF_PATH=$PATH
+    PATH=$(getconf PATH) #Reset path to avoid cross compiler mismatch
     PATH="$PATH:$CROSS_COMPILE_DIR"
 
     if ! patch -R -p1 -s -f --dry-run < $TOP_DIR/build-scripts/patches/sbbr-fwts.patch; then
@@ -71,6 +72,7 @@ do_build()
     --with-bashcompletiondir=$TOP_DIR/$FWTS_PATH/$FWTS_BINARY/bash
 
     make install
+    PATH=$DEF_PATH #Restore def path
     popd
 }
 
@@ -96,8 +98,8 @@ do_package ()
     #TODO: This config file is applicable only for IR
     #Further refine the logic to include only for IR
     cp $TOP_DIR/build-scripts/configs/ir_bbr_fwts_tests.ini $TOP_DIR/$FWTS_PATH/$FWTS_BINARY/bin
-    cp -R $TOP_DIR/$FWTS_PATH/$FWTS_BINARY ramdisk 
-    chmod 777 -R $TOP_DIR/$RAMDISK_PATH/$FWTS_BINARY 
+    cp -R $TOP_DIR/$FWTS_PATH/$FWTS_BINARY ramdisk
+    chmod 777 -R $TOP_DIR/$RAMDISK_PATH/$FWTS_BINARY
 }
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )

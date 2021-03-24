@@ -30,5 +30,6 @@
 
 
 source ./build-scripts/build-all.sh ES
+source ./build-scripts/make_image.sh ES
 
 

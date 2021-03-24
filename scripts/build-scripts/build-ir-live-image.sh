@@ -30,5 +30,6 @@
 
 
 source ./build-scripts/build-all.sh IR
+source ./build-scripts/make_image.sh IR
 
 

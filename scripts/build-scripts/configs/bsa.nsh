@@ -28,9 +28,9 @@
 
 echo -off
 for %i in 0 1 2 3 4 5 6 7 8 9 A B C D E F then
-    if exist FS%i:\bsa_results then
+    if exist FS%i:\acs_results then
         FS%i:
-        cd FS%i:\bsa_results
+        cd FS%i:\acs_results
         if not exist uefi then
             mkdir uefi
         endif
