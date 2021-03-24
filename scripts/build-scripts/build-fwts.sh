@@ -93,9 +93,9 @@ do_package ()
 {
     echo "Packaging FWTS... $VARIANT";
     # Copy binaries to output folder
-    if [ "$BUILD_PLAT" = "IR" ]; then
-     cp $TOP_DIR/build-scripts/configs/ir_bbr_fwts_tests.ini $TOP_DIR/$FWTS_PATH/$FWTS_BINARY/bin
-    fi
+    #TODO: This config file is applicable only for IR
+    #Further refine the logic to include only for IR
+    cp $TOP_DIR/build-scripts/configs/ir_bbr_fwts_tests.ini $TOP_DIR/$FWTS_PATH/$FWTS_BINARY/bin
     cp -R $TOP_DIR/$FWTS_PATH/$FWTS_BINARY ramdisk 
     chmod 777 -R $TOP_DIR/$RAMDISK_PATH/$FWTS_BINARY 
 }
