@@ -46,7 +46,7 @@ get_busybox_src()
 get_uefi_src()
 {
     git clone --depth 1 --single-branch \
-    --branch edk2-stable202011 https://github.com/tianocore/edk2.git
+    --branch edk2-stable202102 https://github.com/tianocore/edk2.git
     pushd $TOP_DIR/edk2
     git submodule update --init
     popd
