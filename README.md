@@ -55,14 +55,24 @@ Build scripts in this repo create a bootable live image which will test BSA, SCT
  For IR : ir_acs_live_image.img
  For ES : es_acs_live_image.img
 
-
-
-###Verification of the ES Image on Qemu
+### Verification of the ES Image on Qemu
 Command to boot with qemu :
     sudo qemu-system-aarch64 -nographic -cpu cortex-a53 -M virt -m 1024 -bios (**path to QEMU_EFI**)/qemu-efi/QEMU_EFI.fd -drive if=virtio,format=raw,file=(**path to image**)/es_acs_live_image.img
 
    Note: qemu for aarch64 must be installed  before running above command  by `sudo apt-get install qemu-utils qemu-efi qemu-system-arm`
 
+### Verification of the ES Image on Fixed Virtual Platform (FVP) environment
+
+The steps for running the ES ACS on an FVP are
+
+  - Modify 'run_model.sh' to add a model command argument that loads 'es_acs_live_image.img' as a virtual disk image. For example, add
+
+    `bp.virtioblockdevice.image path=<path to es image>/es_acs_live_image.img`
+
+    to your model options.
+    Or,
+   - To launch the FVP model with script ‘run_model.sh’ that supports -v option for virtual disk image, use the following command:
+    `./run_model.sh -v <path to es imag>/es_acs_live_image.img`
 - - - - - - - - - - - - - - - - - - - -
 
 _Copyright (c) 2021, Arm Limited and Contributors. All rights reserved._
