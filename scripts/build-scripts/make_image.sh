@@ -146,20 +146,20 @@ prepare_disk_image ()
     #Space for partition table at the top
     cat part_table > $IMG_BB
 
+    #Create Result partition first
+    create_fatpart2 "result" $FAT2_SIZE
+    cat result >> $IMG_BB
+
     #Create fat partition
     create_fatpart "fat_part" $FAT_SIZE
     create_cfgfiles "fat_part"
     cat fat_part >> $IMG_BB
 
-    #Create fat2 partition
-    create_fatpart2 "result" $FAT2_SIZE
-    cat result >> $IMG_BB
-
     #Space for backup partition table at the bottom (1M)
     cat part_table >> $IMG_BB
 
     # create disk image and copy into output folder
-    create_diskimage $IMG_BB $PART_START $FAT_SIZE $FAT2_SIZE
+    create_diskimage $IMG_BB $PART_START $FAT2_SIZE $FAT_SIZE
     cp $IMG_BB $PLATDIR
 
     #remove intermediate files
