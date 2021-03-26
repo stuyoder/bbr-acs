@@ -15,8 +15,7 @@ For details on seperately building and running BBR ACS, please see [BBR REAME](h
 
 ## Release details
  - Code Quality: REL v1.0 ALPHA
- - **The latest pre-built release of ACS for ES is available for download here: (add link)**
- - **The latest pre-built release of ACS for IR is available for download here: (add link)**
+ - **The download instructions for the latest pre-built release of ACS for ES and IR are available here: (https://ap-gerrit-1.ap01.arm.com/gitweb?p=avk/syscomp_bbr.git;a=tree;f=prebuilt_images/v21.03_REL1.0_ALPHA;h=056d9d0935c744706e761815addab86413c6a13f;hb=refs/heads/release)**
  - The BSA tests are written for version 1.0 of the BSA specification.
  - The BBR tests are written for version 1.0 of the BBR specification.
  - The compliance suite is not a substitute for design verification.
