@@ -34,7 +34,7 @@ Build scripts in this repo create a bootable live image which will test BSA, SCT
 
 ### Steps to build ACS live image
 
- 1. Clone [BBR](https://ap-gerrit-1.ap01.arm.com/admin/repos/avk/syscomp_bbr) repo.
+ 1. Clone [BBR](ssh://ap-gerrit-1.ap01.arm.com:29418/avk/syscomp_bbr) repo.
  Note: Please request for permissions if you don't have access.
  2. cd syscomp_bbr/scripts
  3. ./build-scripts/get_source.sh
