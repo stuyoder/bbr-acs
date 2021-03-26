@@ -9,6 +9,7 @@ This release includes both UEFI Shell and OS context tests that are packaged int
 UEFI Self Certification Tests
 BBR based on Firmware Test Suite
 
+For details on seperately building and running BBR ACS, please see [BBR REAME](https://ap-gerrit-1.ap01.arm.com/gitweb?p=avk/syscomp_bbr.git;a=blob;f=bbr_README.md;h=6614ccafa91a20b6776099e0b1fd044c7d7415b8;hb=HEAD)
 
 **Note for ALPA Release:** This repo contains scripts and steps to build live ACS images for ES and IR bands. These shall be moved to the SystemReady repository in BETA release, which shall be the front facing repo for the Arm Partners.
 
