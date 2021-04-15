@@ -65,7 +65,7 @@ create_fatpart ()
     local fatpart_size="$2"  #FAT partition size (in 512-byte blocks)
 
     dd if=/dev/zero of=$fatpart_name bs=$BLOCK_SIZE count=$fatpart_size
-    mkfs.vfat $fatpart_name
+    mkfs.vfat $fatpart_name -n $fatpart_name
     mmd -i $fatpart_name ::/EFI
     mmd -i $fatpart_name ::/EFI/BOOT
     mmd -i $fatpart_name ::/grub
@@ -87,7 +87,7 @@ create_fatpart2 ()
     local fatpart_size="$2"  #FAT partition size (in 512-byte blocks)
 
     dd if=/dev/zero of=$fatpart_name bs=$BLOCK_SIZE count=$fatpart_size
-    mkfs.vfat $fatpart_name
+    mkfs.vfat $fatpart_name -n $fatpart_name
     mmd -i $fatpart_name ::/acs_results
     echo "FAT partition 2 image created"
 }
@@ -146,26 +146,26 @@ prepare_disk_image ()
     #Space for partition table at the top
     cat part_table > $IMG_BB
 
-    #Create Result partition first
-    create_fatpart2 "result" $FAT2_SIZE
-    cat result >> $IMG_BB
-
     #Create fat partition
-    create_fatpart "fat_part" $FAT_SIZE
-    create_cfgfiles "fat_part"
-    cat fat_part >> $IMG_BB
+    create_fatpart "BOOT" $FAT_SIZE
+    create_cfgfiles "BOOT"
+    cat BOOT >> $IMG_BB
 
+    #Result partition
+    create_fatpart2 "RESULT" $FAT2_SIZE
+    cat RESULT >> $IMG_BB
+    
     #Space for backup partition table at the bottom (1M)
     cat part_table >> $IMG_BB
 
     # create disk image and copy into output folder
-    create_diskimage $IMG_BB $PART_START $FAT2_SIZE $FAT_SIZE
+    create_diskimage $IMG_BB $PART_START $FAT_SIZE $FAT2_SIZE
     cp $IMG_BB $PLATDIR
 
     #remove intermediate files
     rm -f part_table
-    rm -f fat_part
-    rm -f result
+    rm -f BOOT
+    rm -f RESULT
 
     echo "Completed preparation of disk image for busybox boot"
     echo "----------------------------------------------------"
