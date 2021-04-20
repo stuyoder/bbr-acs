@@ -37,6 +37,11 @@ for %i in 0 1 2 3 4 5 6 7 8 9 A B C D E F then
         cd uefi
         for %j in 0 1 2 3 4 5 6 7 8 9 A B C D E F then
             if exist FS%j:\EFI\BOOT\bsa\Bsa.efi then
+                if exist FS%j:\EFI\BOOT\bsa\ir_bsa.flag then
+                    #Executing for BSA IR. Execute only OS tests
+                    FS%j:\EFI\BOOT\bsa\Bsa.efi -os -f BsaResults.log
+                    goto Done
+                endif
                 FS%j:\EFI\BOOT\bsa\Bsa.efi -f BsaResults.log
                 goto Done
             endif

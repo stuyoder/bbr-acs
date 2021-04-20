@@ -72,6 +72,13 @@ do_build()
        if ! patch -R -p0 -s -f --dry-run < $TOP_DIR/build-scripts/patches/ir_bsa.patch; then
           echo "Applying IR BSA Patch ..."
           patch  -p0  < $TOP_DIR/build-scripts/patches/ir_bsa.patch
+          touch $TOP_DIR/build-scripts/ir_bsa.flag
+
+          if grep "gEfiHiiConfigRoutingProtocolGuid" MdeModulePkg/Library/UefiHiiServicesLib/UefiHiiServicesLib.c
+          then
+            sed -i '/gEfiHiiConfigRoutingProtocolGuid/{N;d;}' MdeModulePkg/Library/UefiHiiServicesLib/UefiHiiServicesLib.c
+            echo "gEfiHiiConfigRoutingProtocolGuid is removed"
+          fi
        fi
     else
        echo "Specify platform ES or IR"
