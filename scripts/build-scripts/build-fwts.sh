@@ -53,7 +53,7 @@ do_build()
     PATH=$(getconf PATH) #Reset path to avoid cross compiler mismatch
     PATH="$PATH:$CROSS_COMPILE_DIR"
 
-    if ! patch -R -p1 -s -f --dry-run < $TOP_DIR/build-scripts/patches/sbbr-fwts.patch; then
+    if ! patch -p1 -s --dry-run < $TOP_DIR/build-scripts/patches/sbbr-fwts.patch; then
         echo "Applying FWTS Patch ..."
         patch  -p1  < $TOP_DIR/build-scripts/patches/sbbr-fwts.patch
     fi
