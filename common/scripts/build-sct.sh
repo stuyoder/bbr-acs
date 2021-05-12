@@ -162,13 +162,13 @@ do_package ()
         #EBBR
         cp Build/bbrSct/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/SctPackage${TARGET_ARCH}/EBBRStartup.nsh ${TARGET_ARCH}_SCT/SctStartup.nsh
         cp SctPkg/BBR/EfiCompliant_EBBR.ini ${TARGET_ARCH}_SCT/SCT/Dependency/EfiCompliantBBTest/EfiCompliant.ini
-        rm ${TARGET_ARCH}_SCT/SCT/Sequence/SBBR.seq
+        #rm ${TARGET_ARCH}_SCT/SCT/Sequence/SBBR.seq
 
     else
         #SBBR
         cp Build/bbrSct/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/SctPackage${TARGET_ARCH}/SBBRStartup.nsh ${TARGET_ARCH}_SCT/SctStartup.nsh
         cp SctPkg/BBR/EfiCompliant_SBBR.ini ${TARGET_ARCH}_SCT/SCT/Dependency/EfiCompliantBBTest/EfiCompliant.ini
-        rm ${TARGET_ARCH}_SCT/SCT/Sequence/EBBR.seq
+        #rm ${TARGET_ARCH}_SCT/SCT/Sequence/EBBR.seq
 
     fi
 
