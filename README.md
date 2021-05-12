@@ -1,4 +1,4 @@
-# Server Base Boot Requirements - Architecture Compliance Suite
+# Base Boot Requirements - Architecture Compliance Suite
 BBR specification complements the BSA specification by defining the base firmware requirements
 required for out-of-box support of any BSA compatible operating system or hypervisor. These requirements are comprehensive enough
 to enable booting multi-core ARM platforms while remaining minimal enough to allow for OEM and ODM innovation, and
@@ -34,7 +34,7 @@ To run SCT manually, Follow these steps:
  `FS(X):EFI\BOOT\bbr\SCT>SCT -a -v`
  
 
-The User can also select and run tests indviually. For information about running the tests, see [SCT User Guide](http://www.uefi.org/testtools).
+The User can also select and run tests individually. For information about running the tests, see [SCT User Guide](http://www.uefi.org/testtools).
 
 
 ## SBBR based on Firmware Test Suite
@@ -43,41 +43,44 @@ Several SBBR assertions are tested though FWTS.
 
 ### Running FWTS tests
 
-You can choose to boot LUV OS by entering the command:
+You can choose to boot Linux OS by entering the command:
 
 `Shell>exit`
 
-This command loads the grub menu. Press enter to choose the option 'Linux BusyBox' that boots the OS and runs FWTS tests and OS context SBSA tests automatically. <br />
+This command loads the grub menu. Press enter to choose the option 'Linux BusyBox' that boots the OS and runs FWTS tests and OS context BSA tests automatically. <br />
 
 Logs are stored into the a results partition, which can be viewed on any machine after tests are run. 
 
 
-## Build SCT
-SCT is automatically built and packaged into ACS, but it can also be built independently. 
+## Building BBR
+BBR is automatically built and packaged into ACS, but it can also be built independently. 
 
-### 1. Getting the source 
-You can get the source by simply running the `./build-scripts/get_source.sh` script from the `syscomp-bbr/scripts` directory. This will clone `edk2-test` into the directory.
+#### 1.  Get BBR repository 
+    `git clone ssh://ap-gerrit-1.ap01.arm.com:29418/avk/syscomp_bbr bbr-acs`
 
-### 2. Building SCT
-SCT can be built one of two ways. From the same `syscomp-bbr/scripts` directory, you can run `./build-scripts/build-<es/ir>-live-image.sh` to build it along with all the ACS components. Or you can run `./build-scripts/build-sct.sh <ES/IR>` if you want to build it independently from from everything else.
+#### 2. Getting the required Source codes and Tools 
 
-The script will apply a patch to create a "BBR" build recipe in the SCT build system. It will also copy over new files to support the new tests and run/startup sequence.
+You can get the source by simply running the `./build-scripts/get_<ebbr/sbbr>_source.sh` script from the `bbr-acs/<ebbr/sbbr>/scripts` directory. This will clone `edk2-test, edk2, fwts, cross-compiler ` into the directory.
 
-The output can be found in `syscomp-bbr/scripts/edk2-test/uefi-sct/<ARCH>_SCT #(i.e. AARCH64_SCT)`
+#### 2. Building SBBR & EBBR
+ From the same `bbr-acs/<ebbr/sbbr>/scripts` directory, you can run `./build-scripts/build_<ebbr/sbbr>.sh` to build BBR components , i.e, SCT and FWTS. 
 
+The script will apply  patches to create a "EBBR or SBBR" build recipe in the SCT/FWTS build system. It will also copy over new files to support the new tests and run/startup sequence.
 
+The output SCT can be found in 
+    `bbr-acs/<ebbr/sbbr>/scripts/edk2-test/uefi-sct/<ARCH>_SCT #(i.e. AARCH64_SCT)`
 
-## Validation
-
-a. Tests run on SGI-575 Reference Platforms
-
-       i. SBBR Tests. (UEFI Shell based tests built on top of UEFI-SCT Framework)
-       ii. SBBR Tests. (OS based tests built on top of FWTS Framework)
-
-
-b. Known issues
-UEFI-SCT Timer & reboot tests might hang. They can be recovered by resetting the system.
+The output FWTS can be found in 
+    `bbr-acs/<ebbr/sbbr>/scripts/fwts/fwts_output`
 
 
+## Feedback, contributions and support
 
+ - For feedback, use the GitHub Issue Tracker that is associated with this repository.
+ - For support, please send an email to "support-systemready-acs@arm.com" with details.
+ - Arm licensees may contact Arm directly through their partner managers.
+ - Arm welcomes code contributions through GitHub pull requests. See GitHub documentation on how to raise pull requests.
 
+--------------
+
+*Copyright (c) 2021, Arm Limited and Contributors. All rights reserved.*
