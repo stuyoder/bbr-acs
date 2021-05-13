@@ -81,6 +81,10 @@ do_build()
        echo "Applying FWTS Patch ..."
        patch  -p1 -s -f < $BBR_DIR/common/patches/bbr-fwts.patch
     fi
+    if ! patch -R -p0 -s -f --dry-run -p1 < $BBR_DIR/common/patches/fwts_additional_patches/fwts_spcr_baur_rate.patch ; then
+       echo "Applying FWTS additional Patches ..."
+       patch  -p1 -s -f < $BBR_DIR/common/patches/fwts_additional_patches/fwts_spcr_baur_rate.patch
+    fi
     mkdir -p $FWTS_BINARY
     mkdir -p $FWTS_BINARY/bash
     autoreconf -ivf
