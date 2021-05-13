@@ -848,7 +848,7 @@ index 1f139a7..af1107c 100644
  #include "fwts.h"
  #include "fwts_pm_method.h"
  
-+#define ACS_VERSION "v3.0"
++#define ACS_VERSION "BBRv1.0"
 +
  typedef struct {
  	const char *title;		/* Test category */
