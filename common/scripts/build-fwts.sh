@@ -85,6 +85,10 @@ do_build()
        echo "Applying FWTS additional Patches ..."
        patch  -p1 -s -f < $BBR_DIR/common/patches/fwts_additional_patches/fwts_spcr_baur_rate.patch
     fi
+    if ! patch -R -p0 -s -f --dry-run -p1 < $BBR_DIR/common/patches/fwts_additional_patches/0001-Fix-for-dmicheck-test-crashes-with-Sig7.patch ; then
+       echo "Applying FWTS additional Patches for dmicheck..."
+       patch  -p1 -s -f < $BBR_DIR/common/patches/fwts_additional_patches/0001-Fix-for-dmicheck-test-crashes-with-Sig7.patch
+    fi
     mkdir -p $FWTS_BINARY
     mkdir -p $FWTS_BINARY/bash
     autoreconf -ivf
