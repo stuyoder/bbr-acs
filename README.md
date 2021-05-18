@@ -59,19 +59,30 @@ BBR is automatically built and packaged into ACS, but it can also be built indep
     `git clone ssh://ap-gerrit-1.ap01.arm.com:29418/avk/syscomp_bbr bbr-acs`
 
 #### 2. Getting the required Source codes and Tools 
+navigate to the `bbr-acs/<ebbr/sbbr>/scripts` directory
 
-You can get the source by simply running the `./build-scripts/get_<ebbr/sbbr>_source.sh` script from the `bbr-acs/<ebbr/sbbr>/scripts` directory. This will clone `edk2-test, edk2, fwts, cross-compiler ` into the directory.
+get source by running the 
+`./build-scripts/get_<ebbr/sbbr>_source.sh`  
+
+This will download `edk2-test, edk2, fwts and tools` 
 
 #### 2. Building SBBR & EBBR
- From the same `bbr-acs/<ebbr/sbbr>/scripts` directory, you can run `./build-scripts/build_<ebbr/sbbr>.sh` to build BBR components , i.e, SCT and FWTS. 
+ run 
+`./build-scripts/build_<ebbr/sbbr>.sh` 
+to build BBR components, SCT and FWTS. 
 
-The script will apply  patches to create a "EBBR or SBBR" build recipe in the SCT/FWTS build system. It will also copy over new files to support the new tests and run/startup sequence.
+The script will apply  patches to create a "EBBR or SBBR" build recipe in the SCT/FWTS build system. 
 
-The output SCT can be found in 
+The the binaries of SCT are generated here 
     `bbr-acs/<ebbr/sbbr>/scripts/edk2-test/uefi-sct/<ARCH>_SCT #(i.e. AARCH64_SCT)`
 
-The output FWTS can be found in 
+The the binaries of FWTS are generated here 
     `bbr-acs/<ebbr/sbbr>/scripts/fwts/fwts_output`
+
+
+## License
+ 
+Arm BBR ACS is distributed under Apache v2.0 License.
 
 
 ## Feedback, contributions and support
