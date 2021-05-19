@@ -841,7 +841,7 @@ diff --git a/src/lib/src/fwts_framework.c b/src/lib/src/fwts_framework.c
  #include "fwts.h"
  #include "fwts_pm_method.h"
  
-+#define ACS_VERSION "BBRv1.0"
++#define ACS_VERSION "BBRv1.0 BETA-0"
 +
  typedef struct {
  	const char *title;		/* Test category */
