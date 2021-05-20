@@ -6,10 +6,15 @@ market differentiation.
 
 For more information, see [BBR specification](https://developer.arm.com/documentation/den0044/latest).
 
-This release includes both UEFI Shell and OS context tests that are packaged into a bootable OS image.
 The BBR test suites check for compliance against the SBBR/EBBR specification. Like the BSA tests, these tests are also delivered through two runtime executable environments:
   - UEFI Self Certification Tests (SCT)
   - Firmware Test Suite (FWTS)
+
+## Release details
+- Code Quality: v0.8 Beta-0
+- The BBR tests are written for version 1.0 of the BBR specification.
+- The compliance suite is not a substitute for design verification.
+- To review the ACS logs, Arm licensees can contact Arm directly through their partner managers
 
 ## UEFI Self Certification Tests
 Self-Certification Tests (SCTs) test the UEFI implementation requirements defined by SBBR/EBBR. The SCT implementation can eventually merge into the EDK2 tree and as a result, SBBR tests in these deliverables leverage those present in EDK2.
