@@ -41,6 +41,27 @@ To run SCT manually, Follow these steps:
 
 The User can also select and run tests individually. For information about running the tests, see [SCT User Guide](http://www.uefi.org/testtools).
 
+### Manual intervention tests
+Some SCT tests for the ACS require manual intervention/interaction. 
+To run these tests, follow these steps.
+
+1. Move or copy the SCT logs int the result partition so they don't get overwritten 
+
+	- `Shell>FS(Y):`
+	- `FS(Y):> cd \acs_results\`
+	- `FS(Y):\acs_results\> mv sct_results sct_results_orginal`
+
+
+
+2. run manual tests
+
+	- `FS(X):EFI\BOOT\bbr\SCT>SCT -s <ebbr_manual.seq/sbbr_manual.seq>`
+ 
+3. sit with the system as it runs the reset tests, which may require the user to manually reset the system if it hangs.
+
+**note:** the logs for the manual tests will overwrite the logs for the original test run, this is why we have a copy of the original, this new folder will only contain logs from the new tests run in the "manual" sequence file. You may wish to concatenate some of the logs to view together. 
+
+
 
 ## SBBR based on Firmware Test Suite
 Firmware Test Suite (FWTS) is a package that is hosted by Canonical. FWTS provides tests for ACPI, SMBIOS and UEFI.
