@@ -56,10 +56,10 @@ TARGET_ARCH=AARCH64
 GCC=tools/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-
 CROSS_COMPILE=$TOP_DIR/$GCC
 
-BBR=$1
+BUILD_PLAT=$1
 BUILD_TYPE=$2
 
-if ! [[ $BBR = IR ]] && ! [[ $BBR = ES ]] ; then
+if ! [[ $BUILD_PLAT = IR ]] && ! [[ $BUILD_PLAT = ES ]] ; then
     echo "Please provide a target."
     echo "Usage build-sct.sh <IR/ES> <BUILD_TYPE>"
     exit
@@ -78,7 +78,7 @@ else
     BBR_DIR=$TOP_DIR/bbr-acs
 fi
 
-echo "Target: $BBR"
+echo "Target: $BUILD_PLAT"
 echo "Build type: $BUILD_TYPE"
 
 SBBR_TEST_DIR=$BBR_DIR/common/sct-tests/sbbr-tests
@@ -112,7 +112,7 @@ do_build()
     
     #Startup/runtime files.
     mkdir -p uefi-sct/SctPkg/BBR
-    if [ $BBR = IR ]; then
+    if [ $BUILD_PLAT = IR ]; then
     #EBBR
     cp $BBR_DIR/ebbr/config/EBBRStartup.nsh uefi-sct/SctPkg/BBR/
     cp $BBR_DIR/ebbr/config/EBBR.seq uefi-sct/SctPkg/BBR/
@@ -158,7 +158,7 @@ do_package ()
     mkdir -p ${TARGET_ARCH}_SCT/SCT
     cp -r Build/bbrSct/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/SctPackage${TARGET_ARCH}/${TARGET_ARCH}/* ${TARGET_ARCH}_SCT/SCT/
 
-    if [ $BBR = IR ]; then
+    if [ $BUILD_PLAT = IR ]; then
         #EBBR
         cp Build/bbrSct/${UEFI_BUILD_MODE}_${UEFI_TOOLCHAIN}/SctPackage${TARGET_ARCH}/EBBRStartup.nsh ${TARGET_ARCH}_SCT/SctStartup.nsh
         cp SctPkg/BBR/EfiCompliant_EBBR.ini ${TARGET_ARCH}_SCT/SCT/Dependency/EfiCompliantBBTest/EfiCompliant.ini
