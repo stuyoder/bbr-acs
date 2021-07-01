@@ -105,6 +105,7 @@ The the binaries of SCT are generated here
 The the binaries of FWTS are generated here 
     `bbr-acs/<ebbr/sbbr>/scripts/fwts/fwts_output`
 
+NOTE: The UEFI application, CapsuleApp.efi is also built and can be found at the location bbr-acs/<ebbr/sbbr>/scripts/edk2/Build/MdeModule/DEBUG_GCC5/AARCH64 <br />
 
 ## License
  
