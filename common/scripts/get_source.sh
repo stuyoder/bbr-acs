@@ -50,8 +50,9 @@ get_cross_compiler()
 
 get_fwts_src()
 {
-    git clone --depth 1 --single-branch --branch V21.03.00 https://git.launchpad.net/fwts
+    git clone --single-branch https://git.launchpad.net/fwts
     pushd $TOP_DIR/fwts
+    git checkout 08378441d14c0c28b51f9843906582a81a9c1659
     git submodule update --init
     popd
 }
